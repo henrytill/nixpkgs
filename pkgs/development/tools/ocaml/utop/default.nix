@@ -3,12 +3,12 @@
 }:
 
 stdenv.mkDerivation rec {
-  version = "1.17";
+  version = "1.18";
   name = "utop-${version}";
 
   src = fetchurl {
     url = "https://github.com/diml/utop/archive/${version}.tar.gz";
-    sha256 = "0l9lz2nypl2ls3kqzmp738m02yvscabhsfpj70ckp0p98pimnnfd";
+    sha256 = "18bj49kgxx6z34ifh7s6qglp6bad58g8w4b7gnx7kwyslf1khzqm";
   };
 
   buildInputs = [ ocaml findlib makeWrapper cppo camlp4 ];

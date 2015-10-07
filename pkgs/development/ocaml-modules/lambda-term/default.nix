@@ -3,12 +3,12 @@
 assert stdenv.lib.versionAtLeast (stdenv.lib.getVersion ocaml) "4.01";
 
 stdenv.mkDerivation rec {
-  version = "1.8";
+  version = "1.9";
   name = "lambda-term-${version}";
 
   src = fetchurl {
-    url = https://github.com/diml/lambda-term/archive/1.8.tar.gz;
-    sha256 = "0hy11x48q5bbh9czjp0w756cyxzr2c6qcnfm5n9f0i1l4qljwpgc";
+    url = https://github.com/diml/lambda-term/archive/1.9.tar.gz;
+    sha256 = "01pmacp6b92n6dy23zwb1mh38vnv1z2v9z23hg0fb65arx0xj6yj";
   };
 
   buildInputs = [ libev ocaml findlib ocaml_react ];

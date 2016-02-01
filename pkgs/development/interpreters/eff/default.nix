@@ -1,4 +1,5 @@
 { stdenv
+, buildOcaml
 , fetchFromGitHub
 , findlib
 , menhir
@@ -6,17 +7,10 @@
 , which
 }:
 
-let
+buildOcaml {
 
-  inherit (stdenv.lib) getVersion versionAtLeast;
-
-in
-
-assert versionAtLeast (getVersion ocaml) "3.12";
-
-stdenv.mkDerivation {
-
-  name = "eff-dev";
+  name = "eff";
+  version = "dev";
 
   src = fetchFromGitHub {
     owner = "matijapretnar";
@@ -25,10 +19,11 @@ stdenv.mkDerivation {
     sha256 = "1qmhh7k8rmnvcs57gbh72zqrsgyclcfpm82cblfszwapjb7d8ir9";
   };
 
+ minimumSupportedOcamlVersion = "3.12";
+
   buildInputs =
     [ findlib
       menhir
-      ocaml
       which
     ];
 

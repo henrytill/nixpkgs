@@ -1,20 +1,36 @@
-{ stdenv, fetchgit, ocaml, findlib, menhir, which }:
+{ stdenv
+, fetchFromGitHub
+, findlib
+, menhir
+, ocaml
+, which
+}:
 
-let inherit (stdenv.lib) getVersion versionAtLeast; in
+let
+
+  inherit (stdenv.lib) getVersion versionAtLeast;
+
+in
 
 assert versionAtLeast (getVersion ocaml) "3.12";
 
 stdenv.mkDerivation {
 
-  name = "eff-20140928";
+  name = "eff-dev";
 
-  src = fetchgit {
-    url = "https://github.com/matijapretnar/eff.git";
-    rev = "90f884a790fddddb51d4d1d3b7c2edf1e8aabb64";
-    sha256 = "28e389b35e6959072c245c2e79fe305885b1b2d44ff540a02a097e09e9f9698f";
+  src = fetchFromGitHub {
+    owner = "matijapretnar";
+    repo = "eff";
+    rev = "c34670390b28b3639282d3340876f91f8d9cc09f";
+    sha256 = "1qmhh7k8rmnvcs57gbh72zqrsgyclcfpm82cblfszwapjb7d8ir9";
   };
 
-  buildInputs = [ ocaml findlib menhir which ];
+  buildInputs =
+    [ findlib
+      menhir
+      ocaml
+      which
+    ];
 
   doCheck = true;
   checkTarget = "test";
@@ -30,6 +46,6 @@ stdenv.mkDerivation {
     '';
     license = licenses.bsd2;
     platforms = ocaml.meta.platforms;
-    maintainers = [ maintainers.jirkamarsik ];
+    maintainers = with maintainers; [ jirkamarsik henrytill ];
   };
 }

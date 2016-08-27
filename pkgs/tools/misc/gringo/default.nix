@@ -18,6 +18,8 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./gringo-4.5.4-cmath.patch
+  ] ++ stdenv.lib.optionals stdenv.cc.isClang [
+    ./fix-scons-for-clang.patch
   ];
 
   buildPhase = ''

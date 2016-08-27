@@ -1,0 +1,25 @@
+--- gringo/SConstruct.old	2016-08-27 18:18:07.000000000 -0400
++++ gringo/SConstruct	2016-08-27 18:22:06.000000000 -0400
+@@ -19,6 +19,7 @@
+ 
+ # }}}
+ 
++import os
+ from os import mkdir
+ from os.path import join, exists
+ 
+@@ -54,12 +55,12 @@
+     ('WITH_CPPUNIT'  , 'enable target test, running unit tests using cppunit; None, "auto", or library name or test'),
+     )
+ 
+-env = Environment()
++env = Environment(ENV = os.environ)
+ env['BISON']          = 'bison'
+ env['RE2C']           = 're2c'
+ env['PYTHON_CONFIG']  = 'python-config'
+ env['PKG_CONFIG']     = 'pkg-config'
+-env['CXX']            = 'g++'
++env['CXX']            = 'clang++'
+ env['CXXFLAGS']       = ['-std=c++11', '-O0', '-g', '-Wall', '-W', '-pedantic']
+ env['LIBS']           = []
+ env['LINKFLAGS']      = ['-std=c++11', '-O0']

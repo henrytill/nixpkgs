@@ -41,9 +41,6 @@ stdenv.mkDerivation rec {
     optDbus optPythonDBus optLibffado optAlsaLib optLibopus
   ] ++ stdenv.lib.optionals stdenv.isDarwin [ aften AudioToolbox CoreAudio CoreFoundation ];
 
-  # CoreFoundation 10.10 doesn't include CFNotificationCenter.h yet.
-  patches = stdenv.lib.optionals stdenv.isDarwin [ ./clang.patch ./darwin-cf.patch ];
-
   prePatch = ''
     substituteInPlace svnversion_regenerate.sh \
         --replace /bin/bash ${bash}/bin/bash

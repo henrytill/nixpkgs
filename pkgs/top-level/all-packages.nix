@@ -7227,6 +7227,7 @@ with pkgs;
 
   supercollider = libsForQt5.callPackage ../development/interpreters/supercollider {
     fftw = fftwSinglePrec;
+    inherit (darwin.apple_sdk.frameworks) Quartz QuartzCore ImageCaptureCore Cocoa CoreServices Foundation;
   };
 
   supercollider_scel = supercollider.override { useSCEL = true; };

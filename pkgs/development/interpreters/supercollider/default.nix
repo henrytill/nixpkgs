@@ -1,39 +1,61 @@
 { stdenv, fetchurl, cmake, pkgconfig
-, libjack2, libsndfile, fftw, curl, gcc
-, libXt, qtbase, qttools, qtwebkit, readline
+, fftw, libjack2, libsndfile, libXt, readline
+, qtbase, qttools, qtwebkit, qtmacextras
+, Quartz, QuartzCore, ImageCaptureCore
+, Cocoa, CoreServices, Foundation
 , useSCEL ? false, emacs
 }:
 
-let optional = stdenv.lib.optional;
-in
+let
 
-stdenv.mkDerivation rec {
+  optional = stdenv.lib.optional;
+
+  ccVersion = (builtins.parseDrvName stdenv.cc.name).version;
+
+in stdenv.mkDerivation rec {
   name = "supercollider-${version}";
-  version = "3.9.1";
-
-
+  version = "3.9.2";
   src = fetchurl {
-    url = "https://github.com/supercollider/supercollider/releases/download/Version-${version}/SuperCollider-${version}-Source-linux.tar.bz2";
-    sha256 = "150fgnjcmb06r3pa3mbsvb4iwnqlimjwdxgbs6p55zz6g8wbln7a";
+    url = "https://github.com/supercollider/supercollider/releases/download/Version-${version}/SuperCollider-${version}-Source.tar.bz2";
+    sha256 = "0m3kjlfg3bs9fdlq5kkfg6rqjhcwsb7sxdrcmyx7101xajk86xbc";
   };
 
   hardeningDisable = [ "stackprotector" ];
 
-  cmakeFlags = ''
-    -DSC_WII=OFF
-    -DSC_EL=${if useSCEL then "ON" else "OFF"}
+  patchPhase = ''
+    substituteInPlace editors/sc-ide/CMakeLists.txt \
+      --replace "include(InstallRequiredSystemLibraries)" ""
   '';
 
-  nativeBuildInputs = [ cmake pkgconfig qttools ];
+  cmakeFlags =
+    [ "-DSC_WII=OFF"
+      "-DSC_EL=${if useSCEL then "ON" else "OFF"}"
+    ] ++ optional stdenv.isDarwin
+    [ "-DCMAKE_C_COMPILER_ID=AppleClang"
+      "-DCMAKE_C_COMPILER_VERSION=${ccVersion}"
+      "-DCMAKE_C_STANDARD_COMPUTED_DEFAULT=11"
+      "-DCMAKE_CXX_COMPILER_ID=AppleClang"
+      "-DCMAKE_CXX_COMPILER_VERSION=${ccVersion}"
+      "-DCMAKE_CXX_STANDARD_COMPUTED_DEFAULT=98"
+      "-DCMAKE_PREFIX_PATH=${qtmacextras.dev}/lib/cmake"
+    ];
 
-  buildInputs = [
-    gcc libjack2 libsndfile fftw curl libXt qtbase qtwebkit readline ]
-      ++ optional useSCEL emacs;
+  nativeBuildInputs =
+    [ cmake pkgconfig qttools ];
 
-  meta = {
+  buildInputs =
+    [ fftw libjack2 libsndfile libXt qtbase qtwebkit readline ]
+    ++ optional useSCEL emacs
+    ++ optional stdenv.isDarwin [ qtmacextras ];
+
+  propagatedBuildInputs =
+    []
+    ++ optional stdenv.isDarwin [ Quartz QuartzCore ImageCaptureCore Cocoa CoreServices Foundation ];
+
+  meta = with stdenv.lib; {
     description = "Programming language for real time audio synthesis";
     homepage = http://supercollider.sourceforge.net/;
-    license = stdenv.lib.licenses.gpl3Plus;
-    platforms = stdenv.lib.platforms.linux;
+    license = licenses.gpl3Plus;
+    platforms = platforms.linux ++ platforms.darwin;
   };
 }

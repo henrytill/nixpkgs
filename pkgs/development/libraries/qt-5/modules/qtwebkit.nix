@@ -2,7 +2,7 @@
 , qtbase, qtdeclarative, qtlocation, qtsensors
 , fontconfig, gdk_pixbuf, gtk2, libwebp, libxml2, libxslt
 , sqlite, systemd, glib, gst_all_1
-, bison2, flex, gdb, gperf, perl, pkgconfig, python2, ruby
+, bison3, flex, gdb, gperf, perl, pkgconfig, python2, ruby
 , darwin
 , substituteAll
 , flashplayerFix ? false
@@ -16,7 +16,7 @@ qtModule {
   buildInputs = [ fontconfig libwebp libxml2 libxslt sqlite glib gst_all_1.gstreamer gst_all_1.gst-plugins-base ]
     ++ optionals (stdenv.isDarwin) (with darwin.apple_sdk.frameworks; [ OpenGL ]);
   nativeBuildInputs = [
-    bison2 flex gdb gperf perl pkgconfig python2 ruby
+    bison3 flex gdb gperf perl pkgconfig python2 ruby
   ];
 
   __impureHostDeps = optionals (stdenv.isDarwin) [

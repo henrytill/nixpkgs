@@ -3,7 +3,8 @@
 , qtbase, qttools, qtwebkit, qtmacextras
 , Quartz, QuartzCore, ImageCaptureCore
 , Cocoa, CoreServices, Foundation
-, useSCEL ? false, emacs
+, emacsSupport ? true, emacs
+, vimSupport ? true,
 }:
 
 let
@@ -29,7 +30,8 @@ in stdenv.mkDerivation rec {
 
   cmakeFlags =
     [ "-DSC_WII=OFF"
-      "-DSC_EL=${if useSCEL then "ON" else "OFF"}"
+      "-DSC_EL=${if emacsSupport then "ON" else "OFF"}"
+      "-DSC_VIM=${if vimSupport then "ON" else "OFF"}"
     ] ++ optional stdenv.isDarwin
     [ "-DCMAKE_C_COMPILER_ID=AppleClang"
       "-DCMAKE_C_COMPILER_VERSION=${ccVersion}"
@@ -41,11 +43,11 @@ in stdenv.mkDerivation rec {
     ];
 
   nativeBuildInputs =
-    [ cmake pkgconfig qttools ];
+    [ cmake pkgconfig qttools ]
+    ++ optional emacsSupport emacs;
 
   buildInputs =
     [ fftw libjack2 libsndfile libXt qtbase qtwebkit readline ]
-    ++ optional useSCEL emacs
     ++ optional stdenv.isDarwin [ qtmacextras ];
 
   propagatedBuildInputs =

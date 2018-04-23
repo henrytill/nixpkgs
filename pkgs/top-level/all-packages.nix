@@ -7230,8 +7230,6 @@ with pkgs;
     inherit (darwin.apple_sdk.frameworks) Quartz QuartzCore ImageCaptureCore Cocoa CoreServices Foundation;
   };
 
-  supercollider_scel = supercollider.override { useSCEL = true; };
-
   taktuk = callPackage ../applications/networking/cluster/taktuk { };
 
   tcl = tcl-8_6;
